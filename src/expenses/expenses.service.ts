@@ -18,4 +18,11 @@ export class ExpensesService {
     return this.prisma.expense.findMany()
 
   }
+  async findOneExpense(id: string) {
+    return this.prisma.expense.findUnique({
+      where: {
+        id
+      },
+    });
+  }
 }
