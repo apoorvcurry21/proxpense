@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { ExpensesService } from './expenses.service';
 
 @Controller('expenses')
@@ -16,5 +16,9 @@ export class ExpensesController {
     @Get()
     async findAll() {
         return this.expensesService.returnExpense();
+    }
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        return this.expensesService.findOneExpense(id);
     }
 }
