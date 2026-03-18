@@ -7,7 +7,7 @@ export class ExpensesController {
 
     @Post()
     async create(@Body() data: { amount: number; category: string; userId: string }) {
-        return this.expensesService.createExpense(
+        return await this.expensesService.createExpense(
             data.amount,
             data.category,
             data.userId,
@@ -15,10 +15,10 @@ export class ExpensesController {
     }
     @Get()
     async findAll() {
-        return this.expensesService.returnExpense();
+        return await this.expensesService.returnExpense();
     }
     @Get(':id')
     async findOne(@Param('id') id: string) {
-        return this.expensesService.findOneExpense(id);
+        return await this.expensesService.findOneExpense(id);
     }
 }

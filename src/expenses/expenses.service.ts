@@ -6,7 +6,7 @@ export class ExpensesService {
   constructor(private prisma: PrismaService) { }
 
   async createExpense(amount: number, category: string, userId: string) {
-    return this.prisma.expense.create({
+    return await this.prisma.expense.create({
       data: {
         amount,
         category,
@@ -15,11 +15,10 @@ export class ExpensesService {
     });
   }
   async returnExpense() {
-    return this.prisma.expense.findMany()
-
+    return await this.prisma.expense.findMany();
   }
   async findOneExpense(id: string) {
-    return this.prisma.expense.findUnique({
+    return await this.prisma.expense.findUnique({
       where: {
         id
       },
