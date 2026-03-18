@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { async } from 'rxjs';
+import { UpdateExpenseDto } from './update-expense.dto';
 
 @Injectable()
 export class ExpensesService {
@@ -35,6 +35,15 @@ export class ExpensesService {
     return await this.prisma.expense.delete({
       where: { id },
     });
+
+  }
+  async updateExpense(id: string, data: UpdateExpenseDto) {
+    const expense = await this.findOneExpense(id);
+    return await this.prisma.expense.update({
+      where: { id },
+      data,
+    });
   }
 }
+
 
