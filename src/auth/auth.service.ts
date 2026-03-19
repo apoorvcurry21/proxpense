@@ -2,7 +2,9 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { SignupDto } from './dto/signup.dto';
+import { SigninDto } from './dto/signin.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+
 import * as bcrypt from 'bcrypt';
 
 
@@ -53,4 +55,24 @@ export class AuthService {
     const { password, ...result } = user;
     return result;
   }
+  async signin(dto: SigninDto) {
+    // 1. Find the user by email
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!user) {
+      throw new ForbiddenException('Invalid credentials');
+    }
+    // 3. Compare password
+    const isMatch = await bcrypt.compare(dto.password, user.password);
+
+    if (!isMatch) {
+      throw new ForbiddenException('Credentials incorrect');
+    }
+    const { password: _, ...result } = user;
+    return result;
+  }
 }
+
