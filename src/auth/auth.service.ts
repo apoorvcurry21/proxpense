@@ -50,6 +50,7 @@ export class AuthService {
         name: dto.name,
       },
     });
-    return user;
+    const { password, ...result } = user;
+    return result;
   }
 }
