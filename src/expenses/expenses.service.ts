@@ -4,7 +4,7 @@ import { UpdateExpenseDto } from './update-expense.dto';
 
 @Injectable()
 export class ExpensesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async createExpense(amount: number, category: string, userId: string) {
     return await this.prisma.expense.create({
@@ -35,7 +35,6 @@ export class ExpensesService {
     return await this.prisma.expense.delete({
       where: { id },
     });
-
   }
   async updateExpense(id: string, data: UpdateExpenseDto) {
     const expense = await this.findOneExpense(id);
@@ -45,5 +44,3 @@ export class ExpensesService {
     });
   }
 }
-
-
