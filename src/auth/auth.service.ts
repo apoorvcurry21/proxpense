@@ -6,11 +6,17 @@ import { SigninDto } from './dto/signin.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) { }
   create(createAuthDto: CreateAuthDto) {
     return 'This action adds a new auth';
   }
@@ -72,7 +78,23 @@ export class AuthService {
       throw new ForbiddenException('Credentials incorrect');
     }
     const { password: _, ...result } = user;
-    return result;
+    return this.signToken(user.id, user.email);
+  }
+  private async signToken(userId: string, email: string): Promise<{ access_token: string }> {
+    const payload = {
+      sub: userId,
+      email,
+    };
+    const secret = this.configService.get<string>('JWT_SECRET');
+
+    const token = await this.jwtService.signAsync(payload, {
+      expiresIn: '15m',
+      secret: secret,
+    });
+
+    return {
+      access_token: token,
+    };
   }
 }
 
